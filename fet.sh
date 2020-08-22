@@ -32,10 +32,10 @@ for i in ${args[@]}; do
 			exit 0
 		;;
 		color_style)
+			[[ $val = "" ]] && val="med" 
 			[[ $val = "big" ]] && sym="▅▅▅" && break
 			[[ $val = "med" ]] && sym="▅▅" && break 
 			[[ $val = "sml" ]] && sym="▅" && break 
-			[[ $val = "" ]] && break 
 			sym=$val
 		;;
 	esac
