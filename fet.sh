@@ -58,10 +58,24 @@ if [ -e /proc/$$/comm ]; then
 	## Memory
 	# loop over lines in /proc/meminfo until it reaches MemTotal,
 	# then convert the amount (second word) from KB to MB
-	while read -r line; do
-		eq "$line" "MemTotal*" && set -- $line && break
+
+	# Source: https://github.com/KittyKatt/screenFetch/issues/386
+	while IFS=':k ' read -r key val _; do
+		case $key in
+			MemTotal)
+				mem_used=$((mem_used + val))
+				mem_full=$val
+			;;
+			Shmem)
+				mem_used=$((mem_used + val))
+			;;
+			MemFree|Buffers|Cached|SReclaimable)
+				mem_used=$((mem_used - val))
+			;;
+		esac
 	done < /proc/meminfo
-	mem="$(( $2 / 1000 ))MB"
+
+	mem="$((mem_used / 1024)) / $((mem_full / 1024)) MB"
 
 	## Processor
 	while read -r line; do
