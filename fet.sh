@@ -4,6 +4,9 @@
 #  a fetch in pure POSIX shell
 #
 
+### First we get args ###
+args=$@
+
 # supress errors
 exec 2>/dev/null
 set --
@@ -12,6 +15,19 @@ eq() {  # equals  |  [ a = b ] with globbing
 		$2) return
 	esac;! :
 }
+
+
+for i in ${args[@]}; do
+	key=$(echo $i | cut -d = -f 1)
+	val=$(echo $i | cut -d = -f 2)
+	case $key in
+		help)
+			printf "Welcome to the help menu!\n"
+			exit 0
+		;;
+	esac
+done
+
 
 ## DE
 wm="$XDG_CURRENT_DESKTOP"
@@ -56,9 +72,7 @@ if [ -e /proc/$$/comm ]; then
 		done
 
 	## Memory
-	# loop over lines in /proc/meminfo until it reaches MemTotal,
-	# then convert the amount (second word) from KB to MB
-
+	# loop over lines in /proc/meminfo and calculate mem used + totmem
 	# Source: https://github.com/KittyKatt/screenFetch/issues/386
 	while IFS=':k ' read -r key val _; do
 		case $key in
@@ -208,7 +222,8 @@ elif v=/System/Library/CoreServices/SystemVersion.plist; [ -f "$v" ]; then
 	done < "$v"
 fi
 
-eq "$0" "*fetish" && printf 'Step on me daddy\n' && exit
+# Easter egg
+[[ "$args" =~ ^[a-zA-Z\ ]*fetish$ ]] && printf 'Step on me daddy\n' && exit
 
 ## GTK
 while read -r line; do
@@ -226,17 +241,29 @@ cpu="${cpu##CPU }"
 cpu="${cpu##*AMD }"
 cpu="${cpu%% with*}"
 
-col() {
-	printf '  '
-	for i in 1 2 3 4 5 6; do
-		printf '\033[9%sm▅▅' "$i"
-	done
-	printf '\033[0m\n'
-}
-
 print() {
 	[ "$2" ] && printf '\033[9%sm%6s\033[0m%b%s\n' \
 		"${accent:-4}" "$1" "${separator:- ~ }" "$2"
+}
+
+col() {
+	sym="▅"
+	for i in ${args[@]}; do
+		key=$(echo $i | cut -d = -f 1)
+		val=$(echo $i | cut -d = -f 2)
+		if [[ $key = "color_style" ]]; then
+			[[ $val = "big" ]] && sym="▅▅" && break
+			[[ $val = "med" ]] && sym="▅" && break 
+			[[ $val = "" ]] && break 
+			sym=$val
+		fi
+	done
+
+	printf '  '
+	for i in 1 2 3 4 5 6; do
+		printf "\033[9%sm$sym" "$i"
+	done
+	printf '\033[0m\n'
 }
 
 # default value
