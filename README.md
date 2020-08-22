@@ -11,7 +11,7 @@ fetch written in POSIX shell with no external commands
 **Other Distros:** copy `fet.sh` to somewhere in $PATH
 
 ### Arguments
-`fet,sh` accepts command line args, to see them, run,
+`fet.sh` accepts command line args, to see them, run,
 ```
 $ ./fet.sh help
 ```
