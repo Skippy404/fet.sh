@@ -16,13 +16,16 @@ eq() {  # equals  |  [ a = b ] with globbing
 	esac;! :
 }
 
-
 for i in ${args[@]}; do
 	key=$(echo $i | cut -d = -f 1)
 	val=$(echo $i | cut -d = -f 2)
 	case $key in
 		help)
 			printf "Welcome to the help menu!\n"
+			printf "~~~ Current arguments ~~~\n"
+			printf "help -> displays this message\n"
+			printf "color_style=style -> set the color style, \"style\" can be a pre-"
+			printf "existing style in the set {big,med,sml}, or a character.\n"
 			exit 0
 		;;
 	esac
@@ -223,7 +226,7 @@ elif v=/System/Library/CoreServices/SystemVersion.plist; [ -f "$v" ]; then
 fi
 
 # Easter egg
-[[ "$args" =~ ^[a-zA-Z\ ]*fetish$ ]] && printf 'Step on me daddy\n' && exit
+[[ "$args" = *fetish* ]] && printf 'Step on me daddy\n' && exit
 
 ## GTK
 while read -r line; do
@@ -247,13 +250,14 @@ print() {
 }
 
 col() {
-	sym="▅"
+	sym="▅▅"
 	for i in ${args[@]}; do
 		key=$(echo $i | cut -d = -f 1)
 		val=$(echo $i | cut -d = -f 2)
 		if [[ $key = "color_style" ]]; then
-			[[ $val = "big" ]] && sym="▅▅" && break
-			[[ $val = "med" ]] && sym="▅" && break 
+			[[ $val = "big" ]] && sym="▅▅▅" && break
+			[[ $val = "med" ]] && sym="▅▅" && break 
+			[[ $val = "sml" ]] && sym="▅" && break 
 			[[ $val = "" ]] && break 
 			sym=$val
 		fi
