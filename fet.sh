@@ -16,6 +16,9 @@ eq() {  # equals  |  [ a = b ] with globbing
 	esac;! :
 }
 
+### Init ###
+sym="▅▅"
+
 for i in ${args[@]}; do
 	key=$(echo $i | cut -d = -f 1)
 	val=$(echo $i | cut -d = -f 2)
@@ -27,6 +30,13 @@ for i in ${args[@]}; do
 			printf "color_style=style -> set the color style, \"style\" can be a pre-"
 			printf "existing style in the set {big,med,sml}, or a character.\n"
 			exit 0
+		;;
+		color_style)
+			[[ $val = "big" ]] && sym="▅▅▅" && break
+			[[ $val = "med" ]] && sym="▅▅" && break 
+			[[ $val = "sml" ]] && sym="▅" && break 
+			[[ $val = "" ]] && break 
+			sym=$val
 		;;
 	esac
 done
@@ -250,19 +260,6 @@ print() {
 }
 
 col() {
-	sym="▅▅"
-	for i in ${args[@]}; do
-		key=$(echo $i | cut -d = -f 1)
-		val=$(echo $i | cut -d = -f 2)
-		if [[ $key = "color_style" ]]; then
-			[[ $val = "big" ]] && sym="▅▅▅" && break
-			[[ $val = "med" ]] && sym="▅▅" && break 
-			[[ $val = "sml" ]] && sym="▅" && break 
-			[[ $val = "" ]] && break 
-			sym=$val
-		fi
-	done
-
 	printf '  '
 	for i in 1 2 3 4 5 6; do
 		printf "\033[9%sm$sym" "$i"
