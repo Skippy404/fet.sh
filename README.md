@@ -10,6 +10,12 @@ fetch written in POSIX shell with no external commands
 **Gentoo:** [app-misc/fetsh](https://gpo.zugaina.org/Overlays/guru/app-misc/fetsh) (GURU overlay)  
 **Other Distros:** copy `fet.sh` to somewhere in $PATH
 
+### Arguments
+`fet,sh` accepts command line args, to see them, run,
+```
+$ ./fet.sh help
+```
+
 ### Customization
 `fet.sh` can be configured using environment variables, for example:
 ```
